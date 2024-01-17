@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Utworz wizyte</title>
+</head>
+<body>
+<form method="post" action="/appointments/create">
+
+    <select name="doctorId" id="doctorSelectId" >
+        <option value=""disabled selected>Wybierz doktora</option>
+        <th:block th:each="doctor : ${doctors}">
+            <option th:value="${doctor.id}" th:text="${doctor.firstName + ' ' + doctor.lastName}"></option>
+        </th:block>
+    </select>
+    <select name="patientId" id="patientSelectId">
+        <option value="" disabled selected>Wybierz studenta</option>
+        <th:block th:each="patient : ${patients}">
+            <option th:value="${patient.id}" th:text="${patient.firstName + ' ' + patient.lastName}"></option>
+        </th:block>
+    </select>
+    <select name="appointmentReason" id="reasonSelectId" >
+        <option value="" disabled selected>Wybierz język</option>
+        <th:block th:each="reason : ${reasons}">
+            <option th:value="${reason}" th:text="${reason.showValue}"></option>
+        </th:block>
+    </select>
+    <input type="datetime-local" name="term" placeholder="DD-MM-YYYY HH:mm"/></br>
+    <input type="text" name="reservationTime" placeholder="Czas rezerwacji"></br>
+    <button type="submit">Utwórz</button>
+</form>
+</body>
+</html>

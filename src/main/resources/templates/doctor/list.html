@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Lekarze</title>
+</head>
+<body>
+<p><a href="/doctors/create">dodaj</a></p>
+<br>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+        <th>Języki</th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="doctor : ${doctors}">
+        <td th:text="${doctor.id}"></td>
+        <td th:text="${doctor.firstName}"></td>
+        <td th:text="${doctor.lastName}"></td>
+        <form th:action="@{'/doctors/delete'}" method="get" style="display: inline-block;">
+            <input type="hidden" name="doctorId" th:value="${doctor.id}" />
+            <button type="submit" class="btn btn-danger" >Usuń</button>
+        </form>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

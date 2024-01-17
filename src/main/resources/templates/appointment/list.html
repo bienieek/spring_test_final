@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Wizyty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <style>
+    </style>
+</head>
+<body>
+<h1>WIZYTY</h1>
+<p><a href="/appointments/create">Dodaj nowa wizyte</a></p>
+<p><a href="/appointments">Reset Wyszukiwań</a></p>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Lekarz</th>
+        <th>Pacjent</th>
+        <th>Data</th>
+        <th>Cel Wizyty</th>
+        <th>Długość Wizyty</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <!--FORM do szukania wizyt z danymi kryteriami -->
+    <form action="/appointments" method="get">
+        <input type="hidden" name="sortField" th:value="${criteria.sortField}">
+        <input type="hidden" name="sortDirection" th:value="${criteria.sortDirection}">
+        <div class="form-group">
+            <select name="doctorId">
+                <option value="">>Wybierz Lekarza<</option>
+                <option th:each="doctor : ${doctors}"
+                        th:value="${doctor.id}"
+                        th:text="${doctor.lastName} +' '+ ${doctor.firstName}"
+                        th:selected="${criteria.doctorId != null && doctor.id == criteria.doctorId} "></option>
+                </option>
+            </select>
+
+            <select name="patientId">
+                <option value="">>Wybierz Pacjenta<</option>
+                <option th:each="patient : ${patients}"
+                        th:value="${patient.id}"
+                        th:text="${patient.lastName} +' '+ ${patient.firstName}"
+                        th:selected="${criteria.patientId != null && patient.id == criteria.patientId}"></option>
+                </option>
+            </select>
+
+            <select name="appointmentReason">
+                <option value="">>Wybierz Cel Wizyty<</option>
+                <option th:each="appointmentReason : ${appointmentReasons}"
+                        th:value="${appointmentReason}"
+                        th:text="${appointmentReason.showValue}"
+                        th:selected="${criteria.appointmentReason != null && type == criteria.appointmentReason}"></option>
+                </option>
+            </select>
+        </div>
+        </br>
+        <!-- Okienka do dawania daty -->
+        <div class="form-group">
+            <label for="dateFrom">Od Daty</label>
+            <input type="datetime-local" id="dateFrom" name="dateFrom" th:value="${criteria.dateFrom}">
+            </br>
+            <label for="dateTo">Do Daty</label>
+            <input type="datetime-local" id="dateTo" name="dateTo" th:value="${criteria.dateTo}">
+        </div>
+        </br>
+        <button class="button-4" type="submit">Search</button>
+    </form>
+    </br>
+    <!--FORM do sortowania wizyt z danymi kryteriami -->
+    <form action="/appointments" method="get">
+        <input type="hidden" name="appointmentReason" th:value="${criteria.appointmentReason}">
+        <input type="hidden" name="doctorId" th:value="${criteria.doctorId}">
+        <input type="hidden" name="patientId" th:value="${criteria.patientId}">
+        <input type="hidden" name="dateFrom" th:value="${criteria.dateFrom}">
+        <input type="hidden" name="dateTo" th:value="${criteria.dateTo}">
+        <div class="form-group">
+            <select name="sortField">
+                <option th:selected="${criteria.sortField == 'id'}" value="id">ID</option>
+                <option th:selected="${criteria.sortField == 'patient.lastName'}" value="patient.lastName">Pacjent
+                </option>
+                <option th:selected="${criteria.sortField == 'doctor.lastName'}" value="doctor.lastName">Lekarz</option>
+                <option th:selected="${criteria.sortField == 'term'}" value="term">Data</option>
+                <option th:selected="${criteria.sortField == 'appointmentTime'}" value="appointmentTime">Dlugosc Wizyty</option>
+            </select>
+            <select name="sortDirection">
+                <option th:selected="${criteria.sortDirection == 'asc'}" value="asc">Rosnąco</option>
+                <option th:selected="${criteria.sortDirection == 'desc'}" value="desc">Malejąco</option>
+            </select>
+        </div>
+        </br>
+        <button class="button-4" type="submit">Sort</button>
+        </br>
+    </form>
+
+    <tr th:each="appointment : ${appointments}">
+        <td th:text="${appointment.id}"></td>
+        <td th:text="${appointment.doctor}"></td>
+        <td th:text="${appointment.patient}"></td>
+        <td th:text="${#temporals.format(appointment.term, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:text="${appointment.appointmentReason.showValue}"></td>
+        <td th:text="${appointment.appointmentTime}"></td>
+        <td>
+            <form th:action="@{'/appointments/delete'}" method="get" style="display: inline-block;">
+                <input type="hidden" name="appointmentId" th:value="${appointment.id}" />
+                <button type="submit" class="btn btn-danger" >Usuń</button>
+            </form>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

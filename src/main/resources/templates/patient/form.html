@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <title>Utworz pacjenta</title>
+</head>
+<body>
+<form method="post" action="/patients/create">
+
+  <input type="text" name="firstName" placeholder="Imię"/></br>
+  <input type="text" name="lastName" placeholder="Nazwisko"/></br>
+  </br>
+    <select name="doctorId" id="doctorSelectId" >
+        <option value=""disabled selected>Wybierz doktora</option>
+        <th:block th:each="doctor : ${doctors}">
+            <option th:value="${doctor.id}" th:text="${doctor.firstName + ' ' + doctor.lastName}"></option>
+        </th:block>
+    </select>
+  <button type="submit">Utwórz</button>
+</form>
+</body>
+</html>
